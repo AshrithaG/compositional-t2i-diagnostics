@@ -1,0 +1,44 @@
+# checkpoints and model weights
+ckpts/
+*.pth
+*.safetensors
+*.bin
+
+# generated images and run outputs
+r3_outputs/
+output_images/
+eval_out/
+detector_eval/
+detector_all/
+vlm_judge/
+results/
+results_color/
+human_eval_pack/
+*.png
+*.jpg
+
+# large result files
+*.jsonl
+chain_nll*.json
+attention_analysis*.json
+reasoning_chains_*.json
+full_analysis.json
+
+# paper drafts
+*.pdf
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+
+# environments
+env/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# os
+.DS_Store
