@@ -1,12 +1,14 @@
-# Compositional T2I Diagnostics
+# The Plan, Not the Decoder
+
+**Diagnosing and repairing compositional failure in reasoning-augmented text-to-image generation.**
+
+Accepted as an **oral** at [ECCV 2026](https://eccv.ecva.net/) · [arXiv](https://arxiv.org/abs/2608.21713)
 
 Tools for diagnosing why reasoning-augmented text-to-image models fail compositional prompts, and for fixing them at inference time.
 
 Reasoning-augmented generators like [GoT-R1](https://arxiv.org/abs/2505.17022) emit an explicit plan — object names and bounding boxes — before generating image tokens. That plan is machine-readable, so it can be checked, edited, or replaced before the image is decoded. This repo contains the experiments that exploit that.
 
 Built on GoT-R1 and [T2I-CompBench++](https://arxiv.org/abs/2307.06350).
-
-*Two workshop papers based on this work are under review. Results, generated images, and per-item scores will be released after notification.*
 
 ## What's here
 
@@ -80,3 +82,19 @@ Every script checkpoints and resumes, so runs can be interrupted.
 ## License
 
 MIT
+
+## Citation
+
+```bibtex
+@inproceedings{gonuguntla2026plan,
+  title     = {The Plan, Not the Decoder: Diagnosing and Repairing Compositional
+               Failure in Reasoning-Augmented Text-to-Image Generation},
+  author    = {Gonuguntla, Ashritha},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  year      = {2026},
+  eprint    = {2608.21713},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url       = {https://arxiv.org/abs/2608.21713}
+}
+```
