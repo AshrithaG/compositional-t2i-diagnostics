@@ -2,17 +2,52 @@
 
 **Diagnosing and repairing compositional failure in reasoning-augmented text-to-image generation.**
 
-Accepted as an **oral** at [ECCV 2026](https://eccv.ecva.net/) · [arXiv](https://arxiv.org/abs/2608.21713)
+Accepted at the **MUCG workshop at [ECCV 2026](https://eccv.ecva.net/)** (non-archival) and selected for an **oral** presentation · [arXiv](https://arxiv.org/abs/2608.21713)
 
 Tools for diagnosing why reasoning-augmented text-to-image models fail compositional prompts, and for fixing them at inference time.
 
-Reasoning-augmented generators like [GoT-R1](https://arxiv.org/abs/2505.17022) emit an explicit plan — object names and bounding boxes — before generating image tokens. That plan is machine-readable, so it can be checked, edited, or replaced before the image is decoded. This repo contains the experiments that exploit that.
+Reasoning-augmented generators like [GoT-R1](https://arxiv.org/abs/2505.17022) emit an explicit plan (object names and bounding boxes) before generating image tokens. That plan is machine-readable, so it can be checked, edited, or replaced before the image is decoded. This repo contains the experiments that exploit that.
 
 Built on GoT-R1 and [T2I-CompBench++](https://arxiv.org/abs/2307.06350).
 
+## Findings
+
+GoT-R1-1B on T2I-CompBench++ `spatial_val`, 300 prompts per condition, spatial
+relations scored with the OWLv2 open-vocabulary detector, paired sign-flip
+permutation tests. Numbers are from the arXiv version of the paper.
+
+- **A widely used VQA spatial metric is blind to layout.** Swapping the two boxes
+  inside the model's own plan flips the generated layout (detector accuracy 0.75
+  to 0.48, p < 0.001), yet the BLIP-VQA spatial score goes up.
+- **The decoder is a faithful executor.** 94% of generated layouts realize the
+  planned relation, with a planned-versus-detected box IoU of 0.75.
+- **The planner is the bottleneck.** Its planning accuracy is 98% on one phrasing
+  and 54% on a semantically identical one.
+- **Geometry decides, not style or familiarity.** Injected plans with clean,
+  well-separated boxes beat the planner's own by 13.3 points whether their text
+  is terse or verbose, despite a 5x gap in planner negative log-likelihood. Plans
+  that copy the planner's own box statistics gain nothing significant.
+
+| condition | compared with | relation accuracy | change [95% CI] | p |
+|---|---|---|---|---|
+| unperturbed control (own plans) | | 0.750 | | |
+| native-path baseline (fresh plans) | | 0.773 | | |
+| verify-then-generate (K=5) | native baseline | **0.823** | +5.0 [+2.3, +8.0] | .0007 |
+| minimal in-place repair | control | **0.810** | +6.0 [+1.0, +11.0] | .021 |
+| geometric plan repair (margin 0.2) | control | **0.857** | +10.7 [+6.7, +14.7] | <.0001 |
+| oracle: minimal text, clean boxes | control | **0.883** | +13.3 [+8.3, +18.3] | .0001 |
+| oracle: verbose text, clean boxes | control | **0.870** | +12.0 [+6.7, +17.3] | .0001 |
+| oracle: minimal text, planner-statistics boxes | control | 0.780 | +3.0 [-3.0, +8.7] | .37 |
+| oracle: verbose text, planner-statistics boxes | control | 0.803 | +5.3 [0.0, +10.7] | .062 |
+| oracle: planner-mimic (donor plans) | control | 0.740 | -1.0 [-7.0, +5.0] | .83 |
+
+The ladder's ordering holds in each of two further generation seeds. On GoT-R1-7B
+every intervention still improves over the control, and box swap collapses
+detector accuracy from 0.863 to 0.433.
+
 ## What's here
 
-**Plan interventions** — modify the plan, keep everything else fixed, measure the effect on the image.
+**Plan interventions.** Modify the plan, keep everything else fixed, and measure the effect on the image.
 
 | Script | What it does |
 |---|---|
@@ -90,7 +125,8 @@ MIT
   title     = {The Plan, Not the Decoder: Diagnosing and Repairing Compositional
                Failure in Reasoning-Augmented Text-to-Image Generation},
   author    = {Gonuguntla, Ashritha},
-  booktitle = {European Conference on Computer Vision (ECCV)},
+  booktitle = {MUCG Workshop at the European Conference on Computer Vision (ECCV)},
+  note      = {Non-archival; oral presentation},
   year      = {2026},
   eprint    = {2608.21713},
   archivePrefix = {arXiv},
